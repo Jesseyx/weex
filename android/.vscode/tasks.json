@@ -1,0 +1,22 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "set_gdb_server",
+            "type": "shell",
+            "command": ". ${workspaceFolder}/.vscode/set_gdb_server.sh"
+        },
+        {
+            "label": "set_lldb_server",
+            "type": "shell",
+            "command": ". ${workspaceFolder}/.vscode/set_lldb_server.sh"
+        },
+        {
+            "label": "echo",
+            "type": "shell",
+            "command": "echo ${workspaceFolder}"
+          }
+    ]
+}

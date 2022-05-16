@@ -1,0 +1,43 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "gdb(js_runtime)",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/sdk/build/intermediates/cmake/debug/obj/x86/libweexjsb.so",
+            "additionalSOLibSearchPath": "${workspaceRoot}/sdk/build/intermediates/cmake/debug/obj/x86",
+            // "processId": "${command:pickProcess}", // for attach
+            "MIMode": "gdb",
+            "preLaunchTask": "set_gdb_server",
+            // "miDebuggerPath": "${env:ANDROID_HOME}/ndk/18.1.5063045/prebuilt/darwin-x86_64/bin/gdb", // for mac
+            "miDebuggerPath": "${env:ANDROID_HOME}/ndk/18.1.5063045/prebuilt/windows-x86_64/bin/gdb.exe",
+            "miDebuggerServerAddress": ":3000",
+            "setupCommands": [
+                {
+                    "text": "-enable-pretty-printing",
+                    "description": "为 gdb 启用整齐打印"
+                }
+            ]
+        },
+        {
+            "name": "lldb(js_runtime)",
+            "type": "lldb",
+            "request": "custom",
+            // "pid": "${command:pickMyProcess}", // use ${command:pickProcess} to pick other users' processes
+            "preLaunchTask": "set_lldb_server",
+            "initCommands": [
+                "platform select remote-android",
+                "platform connect unix-abstract-connect:///org.apache.weex-0/platform-1652681566529.sock",
+                "settings set target.inherit-env false",
+                // "platform status",
+                "settings set target.exec-search-paths ${workspaceFolder}/sdk/build/intermediates/intermediate-jars/debug/jni/x86",
+                "attach --name libweexjsb.so"
+            ]
+        }
+    ]
+}

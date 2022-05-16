@@ -16,3 +16,4 @@ captures
 /incrementalDeployContinuous.sh
 /incrementalDeployOld.sh
 /.incremental_builder/
+!.vscode

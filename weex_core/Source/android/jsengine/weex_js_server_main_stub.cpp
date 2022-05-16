@@ -25,5 +25,6 @@ int serverMain(int argc, char** argv);
 int main(int argc, char** argv)
 {
     __android_log_print(ANDROID_LOG_INFO, "jsengine", "mainstartup");
+    __android_log_print(ANDROID_LOG_INFO, "serverMain", "%s, fd %s, fd_client %s, enableTrace %s, fileName %s", argv[0], argv[1], argv[2], argv[3], argv[4]);
     return serverMain(argc, argv);
 }

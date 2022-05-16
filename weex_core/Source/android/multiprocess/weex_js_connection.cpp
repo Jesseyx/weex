@@ -257,7 +257,7 @@ IPCSender *WeexJSConnection::start(bool reinit) {
 
 //  static bool startupPie = s_start_pie;
   static bool startupPie = SoUtils::pie_support();
-  __android_log_print(ANDROID_LOG_ERROR,"weex","startupPie :%d", startupPie);
+  __android_log_print(ANDROID_LOG_ERROR,"weex","startupPie :%d, reinit %s", startupPie, reinit);
 
   pid_t child;
   if (reinit) {
@@ -273,22 +273,24 @@ IPCSender *WeexJSConnection::start(bool reinit) {
 #endif
     child = fork();
   }
+  __android_log_print(ANDROID_LOG_ERROR,"weex","startupPie 2 child ret: %d", child);
   if (child == -1) {
     int myerrno = errno;
     munmap(base, IPCFutexPageQueue::ipc_size);
     throw IPCException("failed to fork: %s", strerror(myerrno));
   } else if (child == 0) {
-    __android_log_print(ANDROID_LOG_ERROR,"weex","weexcore fork child success\n");
+    __android_log_print(ANDROID_LOG_ERROR,"weex","startupPie 3 weexcore fork child success\n");
     // the child
     closeAllButThis(client_->ipcFd, server_->ipcFd);
     // implements close all but handles[1]
     // do exec
     doExec(client_->ipcFd, server_->ipcFd, true, startupPie);
-    __android_log_print(ANDROID_LOG_ERROR,"weex","exec Failed completely.");
+    __android_log_print(ANDROID_LOG_ERROR,"weex","startupPie 4 exec Failed completely.");
     // failed to exec
     _exit(1);
   } else {
     printLogOnFile("fork success on main process and start m_impl->futexPageQueue->spinWaitPeer()");
+    __android_log_print(ANDROID_LOG_ERROR,"weex","startupPie 5 fork success on main process and start m_impl->futexPageQueue->spinWaitPeer()");
     m_impl->child = child;
     try {
       m_impl->futexPageQueue->spinWaitPeer();
@@ -413,6 +415,7 @@ std::unique_ptr<const char *[]> EnvPBuilder::build() {
 void doExec(int fdClient, int fdServer, bool traceEnable, bool startupPie) {
   std::string executablePath;
   std::string icuDataPath;
+  __android_log_print(ANDROID_LOG_ERROR,"weex","startupPie 6 doExec");
   if(SoUtils::jss_icu_path() != nullptr) {
     __android_log_print(ANDROID_LOG_ERROR,"weex", "jss_icu_path not null %s",SoUtils::jss_icu_path());
     icuDataPath = SoUtils::jss_icu_path();
@@ -496,6 +499,8 @@ void doExec(int fdClient, int fdServer, bool traceEnable, bool startupPie) {
   } else {
     start_so = "libweexjst.so";
   }
+
+  __android_log_print(ANDROID_LOG_ERROR,"weex","serverMain start_so is %s \n",start_so.c_str());
 
   {
     std::string executableName = executablePath + '/' + start_so;
